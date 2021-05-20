@@ -26,11 +26,11 @@ export default function Cart() {
       res.status === 200 && setCartData(res.data);
       setIsLoading(false);
     };
+    if(!cookies.get("uid")){
+      router.push("/");
+    }
     fetchCart();
   }, []);
-  if(!cookies.get("uid")){
-    return router.push("/");
-  }
   return (
     <div>
       <Head>
