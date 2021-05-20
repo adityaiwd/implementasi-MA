@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ onChange, value, onSubmit }) => {
+const Navbar = ({ onChange, value, onSubmit,hiddenSearch }) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -79,7 +79,7 @@ const Navbar = ({ onChange, value, onSubmit }) => {
           </Link>
 
             <div style={{ display: "flex", alignItems: "center" }}>
-              <div className={classes.search}>
+              <div style={{display: hiddenSearch && "none"}} className={classes.search}>
                 <div className={classes.searchIcon}>
                   <SearchIcon />
                 </div>
@@ -100,6 +100,8 @@ const Navbar = ({ onChange, value, onSubmit }) => {
                 <Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Login</Button>
               </Link>
               <Link href="/register"><Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Register</Button></Link>
+              <Link href="/cart"><Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Cart</Button></Link>
+              <Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Logout</Button>
             </div>
           </Toolbar>
         </Container>

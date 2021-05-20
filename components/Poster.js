@@ -21,12 +21,20 @@ export default function Poster({ image, title, price }) {
   const classes = useStyles();
 
   return (
-    <Card  className={classes.root}>
-        <img style={{ height: "30rem",width:"100%",objectPosition:"center center"}} src={image} alt={title} />
-        <CardContent>
-          <h4>{title}</h4>
-          <p style={{fontSize:"1rem"}}>Rp {price}</p>
-        </CardContent>
+    <Card className={classes.root}>
+      <img
+        style={{
+          height: "30rem",
+          width: "100%",
+          objectPosition: "center center",
+        }}
+        src={image}
+        alt={title}
+      />
+      <CardContent>
+        <h4>{title.length > 25 ? title.substring(0, 24) + "..." : title}</h4>
+        <p style={{ fontSize: "1rem" }}>Rp {price}</p>
+      </CardContent>
       <CardActions>
         <Button size="small" style={{ color: "#00D9C0" }}>
           Rent

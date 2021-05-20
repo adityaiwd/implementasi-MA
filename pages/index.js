@@ -13,15 +13,19 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const searchMovie = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
-
-    const res = await movie.get(`/search/${search}`);
-    if (res.status === 200) {
+    if(search){
+      setIsLoading(true)
+      const res = await movie.get(`/search/${search}`);
+      if (res.status === 200) {
+        setMovies(res.data);
+        setIsLoading(false)
+        
+      } else {
+        console.log(res);
+      }
+    }else{
+      const res = await movie.get("/movies");
       setMovies(res.data);
-      setIsLoading(false)
-
-    } else {
-      console.log(res);
     }
   };
 
