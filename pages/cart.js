@@ -12,9 +12,12 @@ import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
 import transaction from "../api/transaction";
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import { useRouter } from 'next/router'
 
-export default function Home() {
+export default function Cart() {
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter()
   const cookies = new Cookies();
   const [cartData, setCartData] = useState([]);
   useEffect(() => {
@@ -26,7 +29,7 @@ export default function Home() {
     fetchCart();
   }, []);
   if(!cookies.get("uid")){
-    router.push("/");
+    return router.push("/");
   }
   return (
     <div>
@@ -79,7 +82,7 @@ export default function Home() {
                       </TableCell>
                       <TableCell style={{ fontWeight: "bold", fontFamily: "inherit" }}>{row.title}</TableCell>
                       <TableCell style={{ fontWeight: "bold", fontFamily: "inherit" }} >Rp {row.price}</TableCell>
-                      <TableCell align="center">trash</TableCell>
+                      <TableCell align="center"><DeleteForeverOutlinedIcon fontSize="large" style={{color:"#F8333C"}} /></TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
