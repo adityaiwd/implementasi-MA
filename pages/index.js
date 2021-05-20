@@ -6,6 +6,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Poster from "../components/Poster";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import app from "../api/firebase";
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
@@ -13,27 +14,25 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const searchMovie = async (e) => {
     e.preventDefault();
-    if(search){
-      setIsLoading(true)
+    if (search) {
+      setIsLoading(true);
       const res = await movie.get(`/search/${search}`);
       if (res.status === 200) {
         setMovies(res.data);
-        setIsLoading(false)
-        
+        setIsLoading(false);
       } else {
         console.log(res);
       }
-    }else{
+    } else {
       const res = await movie.get("/movies");
       setMovies(res.data);
     }
   };
-
   useEffect(() => {
     const fetchMovies = async () => {
       const res = await movie.get("/movies");
       setMovies(res.data);
-      setIsLoading(false)
+      setIsLoading(false);
       console.log(res);
     };
     fetchMovies();
@@ -61,6 +60,7 @@ export default function Home() {
                 {movies.map((movie) => (
                   <Grid item xs={6} sm={3} key={movie.id_film}>
                     <Poster
+                      id={movie.id_film}
                       image={movie.poster}
                       title={movie.judul}
                       price={movie.harga}
@@ -71,8 +71,16 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <div style={{width:"100%",height:"90vh",display:"flex",justifyContent:"center",alignItems:"center"}}>
-          <CircularProgress style={{color:"#00D9C0"}}/>
+          <div
+            style={{
+              width: "100%",
+              height: "90vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CircularProgress style={{ color: "#00D9C0" }} />
           </div>
         )}
       </Container>

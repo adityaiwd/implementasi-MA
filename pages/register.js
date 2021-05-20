@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import Head from "next/head";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
@@ -6,6 +6,11 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Link from "next/link";
+import Cookies from 'universal-cookie';
+import app from "../api/firebase";
+import {useToasts } from 'react-toast-notifications';
+import { useRouter } from 'next/router'
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -29,8 +34,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Register() {
+export default function Register({history}) {
+  const cookies = new Cookies();
+  const { addToast } = useToasts();
+  const router = useRouter()
   const classes = useStyles();
+  const handleSignUp = useCallback(async event => {
+    event.preventDefault();
+    const {email, password} = event.target.elements;
+    try{
+        await app
+        .auth()
+        .createUserWithEmailAndPassword(email.value, password.value);
+        cookies.set('uid', app.auth().currentUser.uid, { path: '/' });
+        addToast('Successfully created your account', { appearance: 'success' })
+        router.push("/");
+    }catch(err){
+        alert(err);
+        addToast('Something went wrong', { appearance: 'error' })
+
+    }
+},[history]);
+if(cookies.get("uid")){
+    router.push("/");
+  }
   return (
     <div>
       <Head>
@@ -53,16 +80,7 @@ export default function Register() {
         >
          Register
         </Typography>
-        <form className={classes.form} noValidate>
-        <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Username"
-            name="name"
-            autoFocus
-          />
+        <form onSubmit={handleSignUp} className={classes.form} noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -82,15 +100,6 @@ export default function Register() {
             label="Password"
             type="password"
             id="password"
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password Confirmation"
-            type="password"
           />
           <Button
             type="submit"

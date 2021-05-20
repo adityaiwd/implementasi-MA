@@ -7,7 +7,9 @@ import InputBase from "@material-ui/core/InputBase";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
-
+import app from "../api/firebase";
+import Cookies from "universal-cookie";
+import Router from 'next/router'
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Link from "next/link";
@@ -67,19 +69,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ onChange, value, onSubmit,hiddenSearch }) => {
+const Navbar = ({ onChange, value, onSubmit, hiddenSearch }) => {
   const classes = useStyles();
+  const cookies = new Cookies();
+  const handleLogout = () => {
+    app.auth().signOut();
+    cookies.remove("uid", [{ path: "/" }]);
+    Router.reload();
+  };
   return (
     <div className={classes.root}>
       <AppBar position="static" style={{ backgroundColor: "#00D9C0" }}>
         <Container>
           <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
-          <Link href="/">
-            <h2 style={{ display: "block",cursor:"pointer" }}>Rent Movies</h2>
-          </Link>
+            <Link href="/">
+              <h2 style={{ display: "block", cursor: "pointer" }}>
+                Rent Movies
+              </h2>
+            </Link>
 
             <div style={{ display: "flex", alignItems: "center" }}>
-              <div style={{display: hiddenSearch && "none"}} className={classes.search}>
+              <div
+                style={{ display: hiddenSearch && "none" }}
+                className={classes.search}
+              >
                 <div className={classes.searchIcon}>
                   <SearchIcon />
                 </div>
@@ -96,12 +109,60 @@ const Navbar = ({ onChange, value, onSubmit,hiddenSearch }) => {
                   />
                 </form>
               </div>
-              <Link href="/login">
-                <Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Login</Button>
-              </Link>
-              <Link href="/register"><Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Register</Button></Link>
-              <Link href="/cart"><Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Cart</Button></Link>
-              <Button style={{fontFamily:"inherit",fontWeight:"bold",color:"#fff",marginLeft:"1rem"}}>Logout</Button>
+              {!cookies.get("uid") ? (
+                <>
+                  <Link href="/login">
+                    <Button
+                      style={{
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        color: "#fff",
+                        marginLeft: "1rem",
+                      }}
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button
+                      style={{
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        color: "#fff",
+                        marginLeft: "1rem",
+                      }}
+                    >
+                      Register
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/cart">
+                    <Button
+                      style={{
+                        fontFamily: "inherit",
+                        fontWeight: "bold",
+                        color: "#fff",
+                        marginLeft: "1rem",
+                      }}
+                    >
+                      Cart
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={handleLogout}
+                    style={{
+                      fontFamily: "inherit",
+                      fontWeight: "bold",
+                      color: "#fff",
+                      marginLeft: "1rem",
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </>
+              )}
             </div>
           </Toolbar>
         </Container>
