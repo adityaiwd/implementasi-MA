@@ -25,6 +25,9 @@ export default function Home() {
     };
     fetchCart();
   }, []);
+  if(!cookies.get("uid")){
+    router.push("/");
+  }
   return (
     <div>
       <Head>
